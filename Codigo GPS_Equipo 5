@@ -6,7 +6,7 @@
 #include <TinyGPS.h>
 
 TinyGPS gps;
-SoftwareSerial ss(50, 51);
+SoftwareSerial ss(50, 51); //Declaramos los pines digitales de recepcion y transmision de datos utilizando el arduino MEGA 2560
 
 static void smartdelay(unsigned long ms);
 static void print_float(float val, float invalid, int len, int prec);
