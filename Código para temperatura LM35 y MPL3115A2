@@ -1,0 +1,23 @@
+#include <Wire.h>
+#include <Adafruit_MPL3115A2.h>
+
+#define LM35_pin A0 // Pin analógico donde está conectado el LM35
+
+
+Adafruit_MPL3115A2 mpl = Adafruit_MPL3115A2();
+
+void setup() {
+  Serial.begin(9600);
+  mpl.begin();
+}
+
+void loop() {
+  float lm35_temp = (analogRead(LM35_pin)*0.1)-15; // Leer la lectura del LM35
+  float mpl_temp = mpl.getTemperature() -10; // Leer la lectura de temperatura del MPL3115A2 
+  Serial.print("Temperatura del LM35: ");
+  Serial.print(lm35_temp);
+  Serial.print("°C, Temperatura del MPL3115A2: ");
+  Serial.print(mpl_temp);
+  Serial.println("°C");
+  delay(1000);
+}
