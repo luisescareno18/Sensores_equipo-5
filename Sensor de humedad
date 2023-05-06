@@ -1,0 +1,57 @@
+#include <Adafruit_AHTX0.h>
+Adafruit_AHTX0 aht;
+#include <Adafruit_MPL3115A2.h>
+Adafruit_MPL3115A2 baro;
+
+#include <LM35.h>
+#define LM35_pin A0 // Pin analógico donde está conectado el LM35
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Adafruit AHT10/AHT20 demo!");
+
+  if (! aht.begin()) {
+    Serial.println("Could not find AHT? Check wiring");
+    while (1) delay(10);
+  }
+  Serial.println("AHT10 or AHT20 found");
+
+  Serial.begin(9600);
+  while(!Serial);
+  Serial.println("Adafruit_MPL3115A2 test!");
+
+  if (!baro.begin()) {
+    Serial.println("Could not find sensor. Check wiring.");
+    while(1);
+  }
+
+  // use to set sea level pressure for current location
+  // this is needed for accurate altitude measurement
+  // STD SLP = 1013.26 hPa
+  baro.setSeaPressure(1013.26);
+  Serial.println("LABEL,Hora,LM35,MPL3115A2,AHT2O,Humedad");
+}
+
+void loop() {
+  //Serial.println(sensor.getTemp()); // Temp in celcius
+  
+  sensors_event_t humidity, temp;
+  aht.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+  delay(500);
+
+  float temperature = baro.getTemperature();
+
+  
+
+  float lm35_temp = (analogRead(LM35_pin)*0.1)+19; // Leer la lectura del LM35
+  Serial.print("DATA,TIME,");
+  Serial.print(lm35_temp);
+  Serial.print(",");
+  Serial.print(temperature);
+  Serial.print(",");
+  Serial.print(temp.temperature);
+  Serial.print(",");
+  Serial.println(humidity.relative_humidity);
+  
+  delay(1000);
+}
