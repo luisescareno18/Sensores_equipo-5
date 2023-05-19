@@ -1,0 +1,17 @@
+int gas = A0;//Pin donde establecemos la señal de datos del sensor de gas
+float hg; 
+void setup() {
+  Serial.begin(9600);
+  Serial.println("LABEL,Hora,MiCS5524");
+ 
+}
+
+void loop() {
+  hg= analogRead(gas);
+  float gay = (hg/1024.0)*1000.0;
+  Serial.print("DATA,TIME,");
+  Serial.println(gay);
+  
+  delay(50);
+  
+}
