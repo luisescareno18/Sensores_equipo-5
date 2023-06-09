@@ -1,0 +1,34 @@
+volatile float Numero_de_Pulsos;
+int PinSensor=2;
+float K=7.5; 
+void Cuenta_de_Pulsos(){
+  Numero_de_Pulsos++;
+}
+float ObtenerFrecuencia(){
+  float Frec;
+  Numero_de_Pulsos=0;
+  interrupts();
+  delay(500);
+  noInterrupts();
+  Frec=Numero_de_Pulsos;
+  return Frec;
+}
+void setup() {
+
+  Serial.begin(115200);
+  pinMode(PinSensor,INPUT);
+  attachInterrupt(0,Cuenta_de_Pulsos,RISING);
+}
+
+void loop() {
+
+  float Frec=ObtenerFrecuencia();
+  float Flujo_L_m=Frec/K;
+  float Flujo_L_h=Flujo_L_m*60;
+  Serial.print("Frec: ");Serial.print(Frec,0);Serial.print("Hz  ");
+  Serial.print(",");
+  Serial.print("Flujo: ");Serial.print(Flujo_L_m,4);Serial.print("l/m ");
+  Serial.print(",");
+  Serial.print("Flujo: ");Serial.print(Flujo_L_h,4);Serial.println("l/h");
+  Serial.println(Frec);
+}
