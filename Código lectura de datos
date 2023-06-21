@@ -1,0 +1,53 @@
+#include <Adafruit_MPL3115A2.h>
+Adafruit_MPL3115A2 baro;
+////////////////////////////////////////////////////////////////////////////////////////////////////
+int gas = A2;//Pin donde establecemos la señal de datos del sensor de gas
+float hg;
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#include <Adafruit_AHTX0.h>
+Adafruit_AHTX0 aht;
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+void setup() {
+   Serial.begin(9600);
+ // Serial.println("Adafruit AHT10/AHT20 demo!");
+
+  if (! aht.begin()) {
+    //Serial.println("Could not find AHT? Check wiring");
+    while (1) delay(10);
+  }
+  //Serial.println("AHT10 or AHT20 found");
+  
+  Serial.begin(9600);
+  while(!Serial);
+  //Serial.println("Adafruit_MPL3115A2 test!");
+
+  if (!baro.begin()) {
+    //Serial.println("Could not find sensor. Check wiring.");
+    while(1);
+  }
+
+  // use to set sea level pressure for current location
+  // this is needed for accurate altitude measurement .,  
+  // STD SLP = 1013.26 hPa
+  baro.setSeaPressure(1013.26);
+}
+
+void loop() {
+  float pressure = baro.getPressure();
+  float altitude = baro.getAltitude();
+  float temperature = baro.getTemperature();
+  
+   Serial.print("Presión MPL3115A2: ");Serial.println(pressure);
+   Serial.print("Altitud MPL3115A2: ");Serial.println(altitude);
+   Serial.print("temperature MPL3115A2: ");Serial.println(temperature);
+   hg= analogRead(gas);
+  float gay = (hg/1024.0)*1000.0; //Nota: esta operación es para que te mande los datos del sensor de gas ya bien  
+  Serial.print("Sensor de Gas: ");Serial.println(gay);
+  sensors_event_t humidity, temp;
+  aht.getEvent(&humidity, &temp);
+   Serial.print("Humedad relativa AHT20: ");Serial.println(humidity.relative_humidity);
+  Serial.println("------------------------------------------------");
+  delay(1000);
+  
+}
